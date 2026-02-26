@@ -1,4 +1,4 @@
-module pProject
+module github.com/puriice/pProject
 
 go 1.25.6
 

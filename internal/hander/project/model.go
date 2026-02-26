@@ -55,3 +55,19 @@ func (m *Model) QueryProjectByID(context context.Context, id string) (*types.Pro
 
 	return project, nil
 }
+
+func (m *Model) QueryProjectByName(context context.Context, name string) (*types.Project, error) {
+	project := new(types.Project)
+
+	err := m.db.QueryRow(
+		context,
+		"SELECT * FROM projects WHERE name = $1;",
+		name,
+	).Scan(&project.ID, &project.Name, &project.Description, &project.Picture)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return project, nil
+}

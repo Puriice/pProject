@@ -24,6 +24,7 @@ func NewHandler(model types.ProjectModel) *Handler {
 func (h *Handler) RegisterRoute(router *http.ServeMux) {
 	router.HandleFunc("POST /projects", h.handleProjectCreate)
 	router.HandleFunc("GET /projects/id/{id}", h.handleProjectQueryByID)
+	router.HandleFunc("GET /projects/name/{name}", h.handleProjectQueryByName)
 }
 
 func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
@@ -70,6 +71,30 @@ func (h *Handler) handleProjectQueryByID(w http.ResponseWriter, r *http.Request)
 	}
 
 	project, err := h.model.QueryProjectByID(r.Context(), id)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, pgx.ErrNoRows):
+			w.WriteHeader(http.StatusNotFound)
+		default:
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
+		return
+	}
+
+	utils.SendJSON(w, http.StatusOK, project)
+}
+
+func (h *Handler) handleProjectQueryByName(w http.ResponseWriter, r *http.Request) {
+	name := r.PathValue("name")
+
+	if name == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	project, err := h.model.QueryProjectByName(r.Context(), name)
 
 	if err != nil {
 		switch {
