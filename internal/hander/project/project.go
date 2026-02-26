@@ -1,10 +1,12 @@
 package project
 
+import "pProject/internal/types"
+
 type Handler struct {
-	model *ProjectModel
+	model *types.ProjectModel
 }
 
-func NewHandler(model *ProjectModel) *Handler {
+func NewHandler(model *types.ProjectModel) *Handler {
 	return &Handler{
 		model: model,
 	}
