@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/puriice/httplibs/pkg/middleware"
 	"github.com/puriice/pProject/internal/hander/project"
 )
 
@@ -56,7 +57,7 @@ func Start(server *Server) {
 
 	httpServer := &http.Server{
 		Addr:    address,
-		Handler: mux,
+		Handler: middleware.Logger(mux),
 	}
 
 	log.Println("server listening on", address)
