@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"pProject/internal/hander/project"
 	"syscall"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/puriice/pProject/internal/hander/project"
 )
 
 type Server struct {

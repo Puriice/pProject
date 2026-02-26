@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	"pProject/internal/env"
-	"pProject/internal/server"
+
+	"github.com/puriice/pProject/internal/env"
+	"github.com/puriice/pProject/internal/server"
 )
 
 func main() {

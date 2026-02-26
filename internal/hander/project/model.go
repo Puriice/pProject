@@ -2,7 +2,8 @@ package project
 
 import (
 	"context"
-	"pProject/internal/types"
+
+	"github.com/puriice/pProject/internal/types"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

@@ -4,8 +4,9 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"pProject/internal/types"
-	"pProject/internal/utils"
+
+	"github.com/puriice/pProject/internal/types"
+	"github.com/puriice/pProject/internal/utils"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
