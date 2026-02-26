@@ -2,10 +2,14 @@ package project
 
 import (
 	"context"
-
-	"github.com/puriice/pProject/internal/types"
+	"errors"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/puriice/pProject/internal/types"
+)
+
+var (
+	ErrNotFound = errors.New("Row not found")
 )
 
 type Model struct {
@@ -71,4 +75,18 @@ func (m *Model) QueryProjectByName(context context.Context, name string) (*types
 	}
 
 	return project, nil
+}
+
+func (m *Model) DeleteProject(context context.Context, id string) error {
+	cmdTag, err := m.db.Exec(context, "DELETE FROM projects WHERE id = $1;", id)
+
+	if err != nil {
+		return err
+	}
+
+	if cmdTag.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+
+	return nil
 }

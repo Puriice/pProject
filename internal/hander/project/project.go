@@ -26,6 +26,7 @@ func (h *Handler) RegisterRoute(router *http.ServeMux) {
 	router.HandleFunc("POST /projects", h.handleProjectCreate)
 	router.HandleFunc("GET /projects/id/{id}", h.handleProjectQueryByID)
 	router.HandleFunc("GET /projects/name/{name}", h.handleProjectQueryByName)
+	router.HandleFunc("DELETE /projects/{id}", h.handleProjectDeletion)
 }
 
 func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
@@ -109,4 +110,28 @@ func (h *Handler) handleProjectQueryByName(w http.ResponseWriter, r *http.Reques
 	}
 
 	utils.SendJSON(w, http.StatusOK, project)
+}
+
+func (h *Handler) handleProjectDeletion(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := h.model.DeleteProject(r.Context(), id)
+
+	if err == nil {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	if errors.Is(err, ErrNotFound) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	log.Println(err)
+	w.WriteHeader(http.StatusInternalServerError)
 }
