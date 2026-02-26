@@ -18,7 +18,7 @@ func NewModel(db *pgxpool.Pool) *Model {
 }
 
 func (m *Model) CreateProject(context context.Context, payload *types.ProjectPayload) (*types.Project, error) {
-	var id string
+	id := new(string)
 
 	err := m.db.QueryRow(
 		context,
@@ -33,9 +33,25 @@ func (m *Model) CreateProject(context context.Context, payload *types.ProjectPay
 	}
 
 	return &types.Project{
-		ID:          &id,
+		ID:          id,
 		Name:        payload.Name,
 		Description: payload.Description,
 		Picture:     payload.Picture,
 	}, nil
+}
+
+func (m *Model) QueryProjectByID(context context.Context, id string) (*types.Project, error) {
+	project := new(types.Project)
+
+	err := m.db.QueryRow(
+		context,
+		"SELECT * FROM projects WHERE id = $1;",
+		id,
+	).Scan(&project.ID, &project.Name, &project.Description, &project.Picture)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return project, nil
 }

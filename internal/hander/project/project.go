@@ -7,6 +7,7 @@ import (
 	"pProject/internal/types"
 	"pProject/internal/utils"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -22,6 +23,7 @@ func NewHandler(model types.ProjectModel) *Handler {
 
 func (h *Handler) RegisterRoute(router *http.ServeMux) {
 	router.HandleFunc("POST /projects", h.handleProjectCreate)
+	router.HandleFunc("GET /projects/id/{id}", h.handleProjectQueryByID)
 }
 
 func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
@@ -57,4 +59,28 @@ func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.SendJSON(w, http.StatusCreated, response)
+}
+
+func (h *Handler) handleProjectQueryByID(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	project, err := h.model.QueryProjectByID(r.Context(), id)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, pgx.ErrNoRows):
+			w.WriteHeader(http.StatusNotFound)
+		default:
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+
+		return
+	}
+
+	utils.SendJSON(w, http.StatusOK, project)
 }
