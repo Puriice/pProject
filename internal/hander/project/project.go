@@ -5,11 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/puriice/pProject/internal/types"
-	"github.com/puriice/pProject/internal/utils"
-
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/puriice/httplibs/pkg/json"
+	"github.com/puriice/pProject/internal/types"
 )
 
 type Handler struct {
@@ -33,10 +32,10 @@ func (h *Handler) RegisterRoute(router *http.ServeMux) {
 func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
 	var payload types.ProjectPayload
 
-	err := utils.ParseJSON(r, &payload)
+	err := json.ParseJSON(r, &payload)
 
 	if err != nil {
-		if errors.Is(err, utils.MissingBody) {
+		if errors.Is(err, json.MissingBody) {
 			http.Error(w, "Missing Body", http.StatusBadRequest)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
@@ -62,7 +61,7 @@ func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.SendJSON(w, http.StatusCreated, response)
+	json.SendJSON(w, http.StatusCreated, response)
 }
 
 func (h *Handler) handleProjectQueryByID(w http.ResponseWriter, r *http.Request) {
@@ -86,7 +85,7 @@ func (h *Handler) handleProjectQueryByID(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	utils.SendJSON(w, http.StatusOK, project)
+	json.SendJSON(w, http.StatusOK, project)
 }
 
 func (h *Handler) handleProjectQueryByName(w http.ResponseWriter, r *http.Request) {
@@ -110,7 +109,7 @@ func (h *Handler) handleProjectQueryByName(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	utils.SendJSON(w, http.StatusOK, project)
+	json.SendJSON(w, http.StatusOK, project)
 }
 
 func (h *Handler) handleProjectUpdating(w http.ResponseWriter, r *http.Request) {
@@ -123,10 +122,10 @@ func (h *Handler) handleProjectUpdating(w http.ResponseWriter, r *http.Request) 
 
 	payload := new(types.ProjectPayload)
 
-	err := utils.ParseJSON(r, payload)
+	err := json.ParseJSON(r, payload)
 
 	if err != nil {
-		if errors.Is(err, utils.MissingBody) {
+		if errors.Is(err, json.MissingBody) {
 			http.Error(w, "Missing Body", http.StatusBadRequest)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
