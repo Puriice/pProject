@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"pProject/internal/hander/project"
 	"syscall"
 	"time"
 
@@ -45,9 +46,17 @@ func Start(server *Server) {
 
 	router := http.NewServeMux()
 
+	projectModel := project.NewModel(server.db)
+	projectHandler := project.NewHandler(projectModel)
+
+	projectHandler.RegisterRoute(router)
+
+	mux := http.NewServeMux()
+	mux.Handle("/api/v1/", http.StripPrefix("/api/v1", router))
+
 	httpServer := &http.Server{
 		Addr:    address,
-		Handler: router,
+		Handler: mux,
 	}
 
 	log.Println("server listening on", address)

@@ -7,21 +7,25 @@ import (
 	"strings"
 )
 
-func ParseJSON(r *http.Request, payload *any) error {
+var (
+	MissingBody = errors.New("Missing Body")
+)
+
+func ParseJSON(r *http.Request, payload any) error {
 	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
 		return errors.New("Invalid Content-Type header")
 	}
 
 	if r.Body == nil || r.ContentLength == 0 {
-		return errors.New("Missing Body")
+		return MissingBody
 	}
 
 	return json.NewDecoder(r.Body).Decode(payload)
 }
 
-func SendJSON(w http.ResponseWriter, status int, body *any) error {
+func SendJSON(w http.ResponseWriter, status int, body any) error {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
 
-	return json.NewEncoder(w).Encode(*body)
+	return json.NewEncoder(w).Encode(body)
 }
