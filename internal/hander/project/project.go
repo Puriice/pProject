@@ -26,6 +26,7 @@ func (h *Handler) RegisterRoute(router *http.ServeMux) {
 	router.HandleFunc("POST /projects", h.handleProjectCreate)
 	router.HandleFunc("GET /projects/id/{id}", h.handleProjectQueryByID)
 	router.HandleFunc("GET /projects/name/{name}", h.handleProjectQueryByName)
+	router.HandleFunc("PATCH /projects/{id}", h.handleProjectUpdating)
 	router.HandleFunc("DELETE /projects/{id}", h.handleProjectDeletion)
 }
 
@@ -110,6 +111,43 @@ func (h *Handler) handleProjectQueryByName(w http.ResponseWriter, r *http.Reques
 	}
 
 	utils.SendJSON(w, http.StatusOK, project)
+}
+
+func (h *Handler) handleProjectUpdating(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	payload := new(types.ProjectPayload)
+
+	err := utils.ParseJSON(r, payload)
+
+	if err != nil {
+		if errors.Is(err, utils.MissingBody) {
+			http.Error(w, "Missing Body", http.StatusBadRequest)
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		return
+	}
+
+	err = h.model.UpdateProject(r.Context(), id, payload)
+
+	if err == nil {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	if errors.Is(err, ErrNotFound) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	log.Println(err)
+	w.WriteHeader(http.StatusInternalServerError)
 }
 
 func (h *Handler) handleProjectDeletion(w http.ResponseWriter, r *http.Request) {

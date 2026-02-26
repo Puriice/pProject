@@ -3,6 +3,8 @@ package project
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/puriice/pProject/internal/types"
@@ -75,6 +77,50 @@ func (m *Model) QueryProjectByName(context context.Context, name string) (*types
 	}
 
 	return project, nil
+}
+
+func (m *Model) UpdateProject(context context.Context, id string, payload *types.ProjectPayload) error {
+	q := make([]string, 0, 3)
+	args := make([]any, 0, 4)
+	argn := 1
+
+	if payload.Name != nil {
+		q = append(q, fmt.Sprintf("name = $%d", argn))
+		args = append(args, payload.Name)
+		argn++
+	}
+
+	if payload.Description != nil {
+		q = append(q, fmt.Sprintf("description = $%d", argn))
+		args = append(args, payload.Description)
+		argn++
+	}
+
+	if payload.Picture != nil {
+		q = append(q, fmt.Sprintf("picture = $%d", argn))
+		args = append(args, payload.Picture)
+		argn++
+	}
+
+	sql := fmt.Sprintf(
+		"UPDATE projects SET %s WHERE id = $%d;",
+		strings.Join(q, ", "),
+		argn,
+	)
+
+	args = append(args, id)
+
+	cmdTag, err := m.db.Exec(context, sql, args...)
+
+	if err != nil {
+		return err
+	}
+
+	if cmdTag.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+
+	return nil
 }
 
 func (m *Model) DeleteProject(context context.Context, id string) error {
