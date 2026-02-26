@@ -50,7 +50,7 @@ func (m *Model) QueryProjectByID(context context.Context, id string) (*types.Pro
 
 	err := m.db.QueryRow(
 		context,
-		"SELECT * FROM projects WHERE id = $1;",
+		"SELECT id, name, description, picture FROM projects WHERE id = $1;",
 		id,
 	).Scan(&project.ID, &project.Name, &project.Description, &project.Picture)
 
@@ -66,7 +66,7 @@ func (m *Model) QueryProjectByName(context context.Context, name string) (*types
 
 	err := m.db.QueryRow(
 		context,
-		"SELECT * FROM projects WHERE name = $1;",
+		"SELECT id, name, description, picture FROM projects WHERE name = $1;",
 		name,
 	).Scan(&project.ID, &project.Name, &project.Description, &project.Picture)
 
