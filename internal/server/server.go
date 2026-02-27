@@ -13,6 +13,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/puriice/httplibs/pkg/middleware"
+	"github.com/puriice/httplibs/pkg/middleware/cors"
 	"github.com/puriice/pProject/internal/hander/project"
 )
 
@@ -55,9 +56,19 @@ func Start(server *Server) {
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", http.StripPrefix("/api/v1", router))
 
+	corsOption := cors.NewCorsOptions()
+	corsOption.AllowOrigins = cors.Wildcard()
+	corsOption.AllowNoOrigin = true
+	corsOption.AllowCredentials = true
+
+	pipeline := middleware.Pipe(
+		middleware.Logger,
+		middleware.Cors(*corsOption),
+	)
+
 	httpServer := &http.Server{
 		Addr:    address,
-		Handler: middleware.Logger(mux),
+		Handler: pipeline(mux),
 	}
 
 	log.Println("server listening on", address)
