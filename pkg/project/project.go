@@ -7,13 +7,13 @@ import (
 	"github.com/puriice/httplibs/pkg/middleware/cors"
 	"github.com/puriice/httplibs/pkg/server"
 	"github.com/puriice/pProject/internal/hander/project"
-	"github.com/puriice/pProject/internal/repository/postgres"
+	"github.com/puriice/pProject/internal/repository"
 )
 
 func Register(s *server.Server) {
 	router := http.NewServeMux()
 
-	projectModel := postgres.NewRepository(s.Database)
+	projectModel := repository.NewPostgresProjectRepository(s.Database)
 	projectHandler := project.NewHandler(projectModel)
 
 	projectHandler.RegisterRoute(router)

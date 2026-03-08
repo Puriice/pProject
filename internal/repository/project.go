@@ -1,4 +1,4 @@
-package postgres
+package repository
 
 import (
 	"context"
@@ -7,19 +7,20 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/puriice/pProject/internal/types"
+	"github.com/puriice/pProject/pkg/model"
 )
 
-type ProjectRepository struct {
+type PostgresProjectRepository struct {
 	db *pgxpool.Pool
 }
 
-func NewRepository(db *pgxpool.Pool) *ProjectRepository {
-	return &ProjectRepository{
+func NewPostgresProjectRepository(db *pgxpool.Pool) *PostgresProjectRepository {
+	return &PostgresProjectRepository{
 		db: db,
 	}
 }
 
-func (r *ProjectRepository) CreateProject(context context.Context, payload *types.ProjectPayload) (*types.Project, error) {
+func (r *PostgresProjectRepository) CreateProject(context context.Context, payload *types.ProjectPayload) (*model.Project, error) {
 	id := new(string)
 
 	err := r.db.QueryRow(
@@ -34,7 +35,7 @@ func (r *ProjectRepository) CreateProject(context context.Context, payload *type
 		return nil, err
 	}
 
-	return &types.Project{
+	return &model.Project{
 		ID:          id,
 		Name:        payload.Name,
 		Description: payload.Description,
@@ -42,8 +43,8 @@ func (r *ProjectRepository) CreateProject(context context.Context, payload *type
 	}, nil
 }
 
-func (r *ProjectRepository) QueryProjectByID(context context.Context, id string) (*types.Project, error) {
-	project := new(types.Project)
+func (r *PostgresProjectRepository) QueryProjectByID(context context.Context, id string) (*model.Project, error) {
+	project := new(model.Project)
 
 	err := r.db.QueryRow(
 		context,
@@ -58,8 +59,8 @@ func (r *ProjectRepository) QueryProjectByID(context context.Context, id string)
 	return project, nil
 }
 
-func (r *ProjectRepository) QueryProjectByName(context context.Context, name string) (*types.Project, error) {
-	project := new(types.Project)
+func (r *PostgresProjectRepository) QueryProjectByName(context context.Context, name string) (*model.Project, error) {
+	project := new(model.Project)
 
 	err := r.db.QueryRow(
 		context,
@@ -74,7 +75,7 @@ func (r *ProjectRepository) QueryProjectByName(context context.Context, name str
 	return project, nil
 }
 
-func (r *ProjectRepository) UpdateProject(context context.Context, id string, payload *types.ProjectPayload) error {
+func (r *PostgresProjectRepository) UpdateProject(context context.Context, id string, payload *types.ProjectPayload) error {
 	q := make([]string, 0, 3)
 	args := make([]any, 0, 4)
 	argn := 1
@@ -118,7 +119,7 @@ func (r *ProjectRepository) UpdateProject(context context.Context, id string, pa
 	return nil
 }
 
-func (r *ProjectRepository) DeleteProject(context context.Context, id string) error {
+func (r *PostgresProjectRepository) DeleteProject(context context.Context, id string) error {
 	cmdTag, err := r.db.Exec(context, "DELETE FROM projects WHERE id = $1;", id)
 
 	if err != nil {
