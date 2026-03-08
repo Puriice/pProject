@@ -1,14 +1,17 @@
 -- +goose Up
 -- +goose StatementBegin
 SELECT 'up SQL query';
-ALTER TABLE projects.projects 
-ADD CONSTRAINT name_unique
-UNIQUE (name);
+CREATE TABLE projects (
+	id		UUID	UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+	name	TEXT	NOT NULL,
+	picture	TEXT,
+
+	PRIMARY KEY(id)
+);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
 SELECT 'down SQL query';
-ALTER TABLE projects.projects
-DROP CONSTRAINT name_unique;
+DROP TABLE projects;
 -- +goose StatementEnd

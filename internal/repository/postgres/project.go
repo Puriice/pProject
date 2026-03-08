@@ -24,7 +24,7 @@ func (r *ProjectRepository) CreateProject(context context.Context, payload *type
 
 	err := r.db.QueryRow(
 		context,
-		"INSERT INTO projects.projects (name, description, picture) VALUES ($1, $2, $3) RETURNING id",
+		"INSERT INTO projects (name, description, picture) VALUES ($1, $2, $3) RETURNING id",
 		payload.Name,
 		payload.Description,
 		payload.Picture,
@@ -47,7 +47,7 @@ func (r *ProjectRepository) QueryProjectByID(context context.Context, id string)
 
 	err := r.db.QueryRow(
 		context,
-		"SELECT id, name, description, picture FROM projects.projects WHERE id = $1;",
+		"SELECT id, name, description, picture FROM projects WHERE id = $1;",
 		id,
 	).Scan(&project.ID, &project.Name, &project.Description, &project.Picture)
 
@@ -63,7 +63,7 @@ func (r *ProjectRepository) QueryProjectByName(context context.Context, name str
 
 	err := r.db.QueryRow(
 		context,
-		"SELECT id, name, description, picture FROM projects.projects WHERE name = $1;",
+		"SELECT id, name, description, picture FROM projects WHERE name = $1;",
 		name,
 	).Scan(&project.ID, &project.Name, &project.Description, &project.Picture)
 
@@ -98,7 +98,7 @@ func (r *ProjectRepository) UpdateProject(context context.Context, id string, pa
 	}
 
 	sql := fmt.Sprintf(
-		"UPDATE projects.projects SET %s WHERE id = $%d;",
+		"UPDATE projects SET %s WHERE id = $%d;",
 		strings.Join(q, ", "),
 		argn,
 	)
@@ -119,7 +119,7 @@ func (r *ProjectRepository) UpdateProject(context context.Context, id string, pa
 }
 
 func (r *ProjectRepository) DeleteProject(context context.Context, id string) error {
-	cmdTag, err := r.db.Exec(context, "DELETE FROM projects.projects WHERE id = $1;", id)
+	cmdTag, err := r.db.Exec(context, "DELETE FROM projects WHERE id = $1;", id)
 
 	if err != nil {
 		return err
