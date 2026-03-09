@@ -5,8 +5,8 @@ import (
 
 	"github.com/puriice/golibs/pkg/env"
 	"github.com/puriice/golibs/pkg/messaging"
-	"github.com/puriice/pProject/pkg/model"
-	"github.com/puriice/pProject/pkg/sdk"
+	"github.com/puriice/pproject/pkg/model"
+	"github.com/puriice/pproject/pkg/sdk"
 )
 
 func onCreate(project *model.Project) {

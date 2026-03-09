@@ -3,7 +3,7 @@ package sdk_test
 import (
 	"testing"
 
-	project "github.com/puriice/pProject/pkg/sdk"
+	project "github.com/puriice/pproject/pkg/sdk"
 )
 
 func TestGetProjectInfo(t *testing.T) {

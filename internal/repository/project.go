@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/puriice/pProject/internal/types"
-	"github.com/puriice/pProject/pkg/model"
+	"github.com/puriice/pproject/internal/types"
+	"github.com/puriice/pproject/pkg/model"
 )
 
 type PostgresProjectRepository struct {

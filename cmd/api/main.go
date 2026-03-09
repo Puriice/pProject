@@ -7,8 +7,8 @@ import (
 	"github.com/puriice/golibs/pkg/env"
 	"github.com/puriice/golibs/pkg/messaging"
 	"github.com/puriice/golibs/pkg/server"
-	"github.com/puriice/pProject/pkg/routing"
-	"github.com/puriice/pProject/pkg/sdk"
+	"github.com/puriice/pproject/pkg/routing"
+	"github.com/puriice/pproject/pkg/sdk"
 )
 
 func main() {

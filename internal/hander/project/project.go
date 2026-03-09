@@ -9,10 +9,10 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/puriice/golibs/pkg/json"
 	"github.com/puriice/golibs/pkg/messaging"
-	"github.com/puriice/pProject/internal/repository"
-	"github.com/puriice/pProject/internal/types"
-	"github.com/puriice/pProject/pkg/model"
-	"github.com/puriice/pProject/pkg/sdk"
+	"github.com/puriice/pproject/internal/repository"
+	"github.com/puriice/pproject/internal/types"
+	"github.com/puriice/pproject/pkg/model"
+	"github.com/puriice/pproject/pkg/sdk"
 )
 
 type Handler struct {

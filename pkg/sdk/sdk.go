@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/puriice/golibs/pkg/messaging"
-	"github.com/puriice/pProject/pkg/model"
+	"github.com/puriice/pproject/pkg/model"
 )
 
 const (

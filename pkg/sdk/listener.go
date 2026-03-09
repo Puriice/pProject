@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/puriice/golibs/pkg/messaging"
-	"github.com/puriice/pProject/pkg/model"
+	"github.com/puriice/pproject/pkg/model"
 )
 
 type Handler[T any] func(T)

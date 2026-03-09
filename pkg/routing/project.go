@@ -7,8 +7,8 @@ import (
 	"github.com/puriice/golibs/pkg/middleware"
 	"github.com/puriice/golibs/pkg/middleware/cors"
 	"github.com/puriice/golibs/pkg/server"
-	"github.com/puriice/pProject/internal/hander/project"
-	"github.com/puriice/pProject/internal/repository"
+	"github.com/puriice/pproject/internal/hander/project"
+	"github.com/puriice/pproject/internal/repository"
 )
 
 func Register(s *server.Server, broker *messaging.RabbitMQ) {

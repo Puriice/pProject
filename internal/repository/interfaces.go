@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/puriice/pProject/internal/types"
-	"github.com/puriice/pProject/pkg/model"
+	"github.com/puriice/pproject/internal/types"
+	"github.com/puriice/pproject/pkg/model"
 )
 
 type ProjectRepository interface {
