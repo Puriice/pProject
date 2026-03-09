@@ -12,7 +12,7 @@ import (
 	"github.com/puriice/pproject/internal/repository"
 	"github.com/puriice/pproject/internal/types"
 	"github.com/puriice/pproject/pkg/model"
-	"github.com/puriice/pproject/pkg/sdk"
+	"github.com/puriice/pproject/pkg/sdk/pproject"
 )
 
 type Handler struct {
@@ -67,8 +67,8 @@ func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.broker.Publish(sdk.ProjectCreate, &sdk.ProjectEvent{
-		EventType: sdk.ProjectCreate,
+	h.broker.Publish(pproject.ProjectCreate, &pproject.ProjectEvent{
+		EventType: pproject.ProjectCreate,
 		Project:   response,
 	})
 	json.SendJSON(w, http.StatusCreated, response)
@@ -147,8 +147,8 @@ func (h *Handler) handleProjectUpdating(w http.ResponseWriter, r *http.Request) 
 
 	if err == nil {
 
-		h.broker.Publish(sdk.ProjectUpdate, &sdk.ProjectEvent{
-			EventType: sdk.ProjectUpdate,
+		h.broker.Publish(pproject.ProjectUpdate, &pproject.ProjectEvent{
+			EventType: pproject.ProjectUpdate,
 			Project: &model.Project{
 				ID:          &id,
 				Name:        payload.Name,
@@ -180,8 +180,8 @@ func (h *Handler) handleProjectDeletion(w http.ResponseWriter, r *http.Request) 
 	err := h.repo.DeleteProject(r.Context(), id)
 
 	if err == nil {
-		h.broker.Publish(sdk.ProjectDelete, &sdk.ProjectEvent{
-			EventType: sdk.ProjectDelete,
+		h.broker.Publish(pproject.ProjectDelete, &pproject.ProjectEvent{
+			EventType: pproject.ProjectDelete,
 			Project: &model.Project{
 				ID: &id,
 			},

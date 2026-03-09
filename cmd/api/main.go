@@ -8,7 +8,7 @@ import (
 	"github.com/puriice/golibs/pkg/messaging"
 	"github.com/puriice/golibs/pkg/server"
 	"github.com/puriice/pproject/pkg/routing"
-	"github.com/puriice/pproject/pkg/sdk"
+	"github.com/puriice/pproject/pkg/sdk/pproject"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	serv := server.NewServer(host, port, database)
-	broker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), sdk.ExchangeName)
+	broker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), pproject.ExchangeName)
 
 	if err != nil {
 		log.Fatal(err)

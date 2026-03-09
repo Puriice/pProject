@@ -6,7 +6,7 @@ import (
 	"github.com/puriice/golibs/pkg/env"
 	"github.com/puriice/golibs/pkg/messaging"
 	"github.com/puriice/pproject/pkg/model"
-	"github.com/puriice/pproject/pkg/sdk"
+	"github.com/puriice/pproject/pkg/sdk/pproject"
 )
 
 func onCreate(project *model.Project) {
@@ -26,13 +26,13 @@ func onError(err error) {
 }
 
 func main() {
-	broker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), sdk.ExchangeName)
+	broker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), pproject.ExchangeName)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	projectService := sdk.NewService("", broker)
+	projectService := pproject.NewService("", broker)
 
 	listener, err := projectService.NewListener("projects.test")
 

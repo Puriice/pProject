@@ -1,13 +1,13 @@
-package sdk_test
+package pproject_test
 
 import (
 	"testing"
 
-	project "github.com/puriice/pproject/pkg/sdk"
+	"github.com/puriice/pproject/pkg/sdk/pproject"
 )
 
 func TestGetProjectInfo(t *testing.T) {
-	projectService := project.NewService("http://localhost:8081", nil)
+	projectService := pproject.NewService("http://localhost:8081", nil)
 
 	project, err := projectService.GetProjectInfo("b5e50b5a-9234-44e3-af27-054b88b20b3a")
 
