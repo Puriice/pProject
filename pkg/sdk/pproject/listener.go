@@ -1,6 +1,7 @@
 package pproject
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/puriice/golibs/pkg/messaging"
@@ -50,8 +51,8 @@ func (l *ProjectListener) OnError(handler Handler[error]) {
 	l.onError = handler
 }
 
-func (l *ProjectListener) Subscribe() error {
-	return l.listener.Subscribe(func(body []byte) error {
+func (l *ProjectListener) Subscribe(context context.Context) error {
+	return l.listener.Subscribe(context, func(body []byte) error {
 		var event ProjectEvent
 		err := json.Unmarshal(body, &event)
 
